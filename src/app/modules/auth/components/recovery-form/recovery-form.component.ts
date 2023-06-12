@@ -3,7 +3,9 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 import { CustomValidators } from '@utils/validators';
-
+import { AuthService } from '@services/auth.service';
+import { RequestStatus } from '@models/request-status.model';
+import { Router, ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-recovery-form',
   templateUrl: './recovery-form.component.html',
@@ -20,16 +22,37 @@ export class RecoveryFormComponent {
       ],
     }
   );
-  status: string = 'init';
+  status: RequestStatus = 'init';
   faEye = faEye;
   faEyeSlash = faEyeSlash;
   showPassword = false;
-
-  constructor(private formBuilder: FormBuilder) {}
+  tokens : string = '';
+  constructor(private formBuilder: FormBuilder,
+              private authService : AuthService,
+              private router : Router,
+              private activatedRouter : ActivatedRoute) {
+                this.activatedRouter.queryParamMap.subscribe(params => {
+                  const token = params.get('token')
+                  if(token){
+                    this.tokens = token
+                  }else{
+                    this.router.navigate(['/login'])
+                  }
+                })
+              }
 
   recovery() {
     if (this.form.valid) {
-      // Todo
+      const { newPassword} = this.form.getRawValue();
+      this.status = 'loading';
+      this.authService.changePassword(this.tokens,newPassword).subscribe({
+        next : () => {
+          this.status = 'success';
+          this.router.navigate(['/login'])
+        }, error : () => {
+          this.status = 'failed';          
+        }
+      })
     } else {
       this.form.markAllAsTouched();
     }
