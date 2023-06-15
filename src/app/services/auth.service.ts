@@ -6,6 +6,7 @@ import { TokenService } from './token.service';
 import { ResponseLogin } from '@models/auth.model';
 import { User } from '@models/users.model';
 import { BehaviorSubject } from 'rxjs';
+import { TokenInterceptor, checkToken } from '@interceptors/token.interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -61,12 +62,8 @@ export class AuthService {
   }
 
   prifile(){
-    const token = this.tokenService.getToken();
-    return this.http.get<User>(`${this.apiUrl}/api/v1/auth/profile`,{
-      headers : {
-        Authorization : `Bearer ${token}`
-      }
-    }).pipe(
+    //const token = this.tokenService.getToken();
+    return this.http.get<User>(`${this.apiUrl}/api/v1/auth/profile`,{ context : checkToken() }).pipe(
       tap(user => { this.user$.next(user)})
     ) 
   }
