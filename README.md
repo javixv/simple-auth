@@ -1,6 +1,6 @@
 # TrelloAuth
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli).
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli). Simplemente es un proyecto que se conecta a una Api, pero tiene una logica de como autenticar a los usuario y manejar sus estados de session dentro de la aplicación, al mismo tiempo las rutas en las que se puede acceder estan protegidas como medida de seguridad, es un proyecto que puede servir como ejemplo para la autenticación y sessiones puede ser adaptado para consumo de diferenetes Apis modificando pocas lineas de codigo
 
 ## Development server
 
